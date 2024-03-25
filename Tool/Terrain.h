@@ -12,6 +12,8 @@ public:
 public:
 	void		Set_MainView(CToolView* pMainView) { m_pMainView = pMainView; }
 
+	vector<TILE*>&		Get_VecTile() { return m_vecTile; }
+
 public:
 	void		Initialize();
 	void		Update();

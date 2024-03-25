@@ -42,7 +42,11 @@ typedef	struct tagFrame
 
 typedef	struct tagUnitData
 {
-	CString	strName;	
+#ifndef _AFX
+	wstring	strName;
+#else	
+	CString	strName;
+#endif // _AFX	
 
 	int		iHp;
 	int		iAttack;

@@ -52,6 +52,9 @@
     <Filter Include="06. MyForm\02. MapTool">
       <UniqueIdentifier>{28c73f9b-015c-4c91-ad1b-37beefb84242}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. FileInfo">
+      <UniqueIdentifier>{c5d73f8e-e46b-4fab-b405-20fd2699994e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -108,6 +111,9 @@
     <ClInclude Include="MapTool.h">
       <Filter>06. MyForm\02. MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="FileInfo.h">
+      <Filter>07. FileInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -154,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="MapTool.cpp">
       <Filter>06. MyForm\02. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="FileInfo.cpp">
+      <Filter>07. FileInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

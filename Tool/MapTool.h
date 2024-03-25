@@ -1,5 +1,6 @@
 #pragma once
 #include "afxwin.h"
+#include <atlimage.h>
 
 
 // CMapTool 대화 상자입니다.
@@ -32,5 +33,9 @@ private:
 public:
 	//control
 	CListBox m_ListBox;
+	CStatic m_Picture;
 
+	map<CString, CImage*>		m_mapPngImg;
+	int							m_iDrawID = 0;
+	afx_msg void OnSaveData();
 };
