@@ -37,7 +37,7 @@ BOOL CMapTool::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// 여기에 초기화 코드 추가
-	LoadImagesFromDirectory(L"C:\\Users\\명승호\\Desktop\\쥬신\\4차팀과제\\Texture\\테일즈위버 리소스\\테일즈위버 리소스\\Stage\\크기"); // 경로는 예시입니다. 실제 경로로 변경하세요.
+	LoadImagesFromDirectory(L"C:\\Users\\명승호\\Desktop\\쥬신\\4차팀과제\\Texture\\Stage\\BackGround\\BackGround"); // 경로는 예시입니다. 실제 경로로 변경하세요.
 	return TRUE;
 }
 
@@ -297,8 +297,12 @@ void CMapTool::OnBnClickedOk()
 		CToolView* pToolView = pMainFrame->GetToolView();
 		if (pToolView != nullptr)
 		{
-			// 선택된 이미지 이름을 ToolView로 전달합니다.
-			pToolView->SetSelectedImage(strSelectName);
+			// Terrain에 선택된 이미지 설정
+			CTerrain* pTerrain = pToolView->m_pTerrain;
+			if (pTerrain != nullptr)
+			{
+				pTerrain->SetSelectedImage(strSelectName);
+			}
 		}
 	}
 

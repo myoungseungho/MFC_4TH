@@ -17,11 +17,19 @@ CTerrain::~CTerrain()
 void CTerrain::Initialize()
 {
 	if (FAILED(CTextureMgr::Get_Instance()->
-		Insert_Texture(L"../Texture/Stage/Terrain/Tile/Tile%d.png", TEX_MULTI, L"Terrain", L"Tile", 36)))
+		Insert_Texture(L"../Texture/Stage/Terrain/Tile/Tile%d.png", TEX_MULTI, L"Terrain", L"Tile", 38)))
 	{
 		AfxMessageBox(L"Tile Img Insert Failed");
 		return;
 	}
+
+	if (FAILED(CTextureMgr::Get_Instance()->
+		Insert_Texture(L"../Texture/Stage/BackGround/BackGround/BackGound%d.png", TEX_MULTI, L"BackGround", L"BackGround", 9)))
+	{
+		AfxMessageBox(L"Tile Img Insert Failed");
+		return;
+	}
+
 
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -35,7 +43,7 @@ void CTerrain::Initialize()
 			pTile->vPos = {fX, fY , 0.f};
 			pTile->vSize = { (float)TILECX, (float)TILECY, 0.f };
 			pTile->byOption = 0;
-			pTile->byDrawID = 3;
+			pTile->byDrawID = 36;
 
 			m_vecTile.push_back(pTile);			
 		}
@@ -143,6 +151,36 @@ void CTerrain::Render()
 
 		++iIndex;
 		
+	}
+
+	// 선택된 이미지 렌더링
+	if (!m_strSelectedImage.IsEmpty())
+	{
+		// 선택된 이미지의 텍스처 정보 조회
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_strSelectedImage);
+		if (pTexInfo != nullptr)
+		{
+			D3DXMATRIX matWorld, matScale, matTrans;
+
+			// 이미지 위치와 크기를 조절할 수 있는 트랜스폼 설정
+			D3DXMatrixScaling(&matScale, 1.0f, 1.0f, 1.0f); // 필요에 따라 스케일 조정
+			D3DXMatrixTranslation(&matTrans,
+				WINCX / 2.0f - (pTexInfo->tImgInfo.Width / 2.0f),
+				WINCY / 2.0f - (pTexInfo->tImgInfo.Height / 2.0f),
+				0.0f);
+
+			matWorld = matScale * matTrans;
+			Set_Ratio(&matWorld, fX, fY); // 화면 비율에 맞게 조정
+
+			CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+			// 이미지 그리기
+			CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+				nullptr,
+				&D3DXVECTOR3(pTexInfo->tImgInfo.Width / 2.0f, pTexInfo->tImgInfo.Height / 2.0f, 0.0f),
+				nullptr,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
 	}
 }
 

@@ -56,7 +56,6 @@ void CToolView::OnInitialUpdate()
 
 	SetScrollSizes(MM_TEXT, CSize(TILEX * TILECX, TILEY * TILECY / 2));
 
-
 	// AfxGetMainWnd : 현재의 메인 윈도우 정보를 반환하는 전역 함수
 	CMainFrame*		pMainFrm = (CMainFrame*)AfxGetMainWnd();
 
@@ -89,8 +88,6 @@ void CToolView::OnInitialUpdate()
 		AfxMessageBox(L"Device Init Failed");
 	}
 
-	//m_pSingle = new CSingleTexture;
-	//m_pSingle->Insert_Texture(L"../Texture/Cube.png");
 
 	if (FAILED(CTextureMgr::Get_Instance()->
 		Insert_Texture(L"../Texture/Cube.png", TEX_SINGLE, L"Cube")))
