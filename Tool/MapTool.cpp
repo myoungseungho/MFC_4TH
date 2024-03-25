@@ -32,12 +32,54 @@ void CMapTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PICTURE, m_Picture);
 }
 
+BOOL CMapTool::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	// 여기에 초기화 코드 추가
+	LoadImagesFromDirectory(L"C:\\Users\\명승호\\Desktop\\쥬신\\4차팀과제\\Texture\\테일즈위버 리소스\\테일즈위버 리소스\\Stage\\크기"); // 경로는 예시입니다. 실제 경로로 변경하세요.
+	return TRUE;
+}
+
+void CMapTool::LoadImagesFromDirectory(const CString& strDirectory)
+{
+	CFileFind finder;
+	BOOL bWorking = finder.FindFile(strDirectory + L"\\*.png"); // PNG 파일만 찾습니다.
+
+	while (bWorking)
+	{
+		bWorking = finder.FindNextFile();
+
+		if (finder.IsDots() || finder.IsDirectory())
+			continue;
+
+		CString strFilePath = finder.GetFilePath();
+		CString strFileName = finder.GetFileName();
+
+		// 파일의 확장자 명을 잘라내는 함수
+		PathRemoveExtension(strFileName.GetBuffer());
+		strFileName.ReleaseBuffer();
+
+		auto iter = m_mapPngImg.find(strFileName);
+
+		if (iter == m_mapPngImg.end())
+		{
+			CImage* pPngImg = new CImage;
+
+			pPngImg->Load(strFilePath); // 해당 경로의 이미지를 로드
+
+			m_mapPngImg.insert({ strFileName, pPngImg });
+			m_ListBox.AddString(strFileName);
+		}
+	}
+}
 
 BEGIN_MESSAGE_MAP(CMapTool, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CMapTool::OnListBox)
 	ON_WM_DROPFILES()
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMapTool::OnSaveData)
+	ON_BN_CLICKED(IDOK, &CMapTool::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -234,4 +276,31 @@ void CMapTool::OnSaveData()
 
 		CloseHandle(hFile);
 	}
+}
+
+
+void CMapTool::OnBnClickedOk()
+{
+	// 리스트 박스에서 선택된 아이템의 인덱스를 얻습니다.
+	int iSelectIdx = m_ListBox.GetCurSel();
+	if (LB_ERR == iSelectIdx)
+		return;
+
+	CString strSelectName;
+	m_ListBox.GetText(iSelectIdx, strSelectName);
+
+	// 메인 프레임에 접근합니다.
+	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	if (pMainFrame != nullptr)
+	{
+		// ToolView에 접근합니다.
+		CToolView* pToolView = pMainFrame->GetToolView();
+		if (pToolView != nullptr)
+		{
+			// 선택된 이미지 이름을 ToolView로 전달합니다.
+			pToolView->SetSelectedImage(strSelectName);
+		}
+	}
+
+	CDialog::OnOK(); // 기본 OK 처리를 실행합니다.
 }
