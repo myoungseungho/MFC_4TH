@@ -20,12 +20,14 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
+	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnListBox();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
 	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedOk();
+	void LoadImagesFromDirectory(const CString& strDirectory);
 
 private:
 	void	Horizontal_Scroll();
