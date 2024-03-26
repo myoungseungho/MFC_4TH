@@ -88,7 +88,6 @@ void CToolView::OnInitialUpdate()
 		AfxMessageBox(L"Device Init Failed");
 	}
 
-
 	if (FAILED(CTextureMgr::Get_Instance()->
 		Insert_Texture(L"../Texture/Cube.png", TEX_SINGLE, L"Cube")))
 	{

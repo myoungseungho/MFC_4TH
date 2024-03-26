@@ -64,14 +64,48 @@ void CTerrain::Update()
 
 void CTerrain::Mini_Render()
 {
-	D3DXMATRIX	matWorld, matScale, matTrans;
+	// 선택된 이미지 렌더링
+	if (!m_strSelectedImage.IsEmpty())
+	{
+		// 선택된 이미지의 텍스처 정보 조회
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Map", L"BackGround", m_strNumberByte);
 
-	TCHAR	szBuf[MIN_STR] = L"";
-	int		iIndex(0);
+		if (pTexInfo != nullptr)
+		{
+			D3DXMATRIX	matWorld, matScale, matTrans;
+
+			TCHAR	szBuf[MIN_STR] = L"";
+			int		iIndex(0);
+			D3DXMatrixIdentity(&matWorld);
+			D3DXMatrixScaling(&matScale, 2.f, 2.f, 2.f);
+			D3DXMatrixTranslation(&matTrans,
+				0,
+				0,
+				0);
+
+			matWorld = matScale * matTrans;
+
+			Set_Ratio(&matWorld, 0.15f, 0.3f);
+
+			CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+			if (nullptr == pTexInfo)
+				return;
+
+			float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+			float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
+			CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+				nullptr,
+				&D3DXVECTOR3(0, 0, 0.f),
+				nullptr,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		}
+	}
 
 	for (auto pTile : m_vecTile)
 	{
-
 		D3DXMATRIX	matWorld, matScale, matTrans;
 
 		TCHAR	szBuf[MIN_STR] = L"";
