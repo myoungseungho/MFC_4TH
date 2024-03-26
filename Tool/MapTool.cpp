@@ -122,7 +122,7 @@ void CMapTool::OnListBox()
 
 	//_tstoi : 문자를 정수형으로 변환하는 함수
 	m_iDrawID = _tstoi(strSelectName);
-	
+
 	UpdateData(FALSE);
 }
 
@@ -148,7 +148,7 @@ void CMapTool::OnDropFiles(HDROP hDropInfo)
 		DragQueryFile(hDropInfo, i, szFilePath, MAX_PATH);
 
 		CString	strRelativePath = CFileInfo::ConvertRelativePath(szFilePath);
-		
+
 		// 경로 중 파일의 이름만 잘라내는 함수
 		CString	strFileName = PathFindFileName(strRelativePath);
 
@@ -164,7 +164,7 @@ void CMapTool::OnDropFiles(HDROP hDropInfo)
 
 		if (iter == m_mapPngImg.end())
 		{
-			CImage*		pPngImg = new CImage;
+			CImage* pPngImg = new CImage;
 
 			pPngImg->Load(strRelativePath);	// 해당 경로의 이미지를 로드
 
@@ -183,10 +183,10 @@ void CMapTool::OnDestroy()
 {
 
 	for_each(m_mapPngImg.begin(), m_mapPngImg.end(), [](auto& MyPair)
-	{
-		MyPair.second->Destroy();
-		Safe_Delete(MyPair.second);
-	});
+		{
+			MyPair.second->Destroy();
+			Safe_Delete(MyPair.second);
+		});
 
 	m_mapPngImg.clear();
 
@@ -202,7 +202,7 @@ void CMapTool::Horizontal_Scroll()
 
 	int iWidth(0);
 
-	CDC*	pDC = m_ListBox.GetDC();
+	CDC* pDC = m_ListBox.GetDC();
 
 	for (int i = 0; i < m_ListBox.GetCount(); ++i)
 	{
@@ -248,7 +248,7 @@ void CMapTool::OnSaveData()
 	if (IDOK == Dlg.DoModal())
 	{
 		CString			str = Dlg.GetPathName().GetString();
-		const TCHAR*	pGetPath = str.GetString();
+		const TCHAR* pGetPath = str.GetString();
 
 		HANDLE	hFile = CreateFile(pGetPath,
 			GENERIC_WRITE, 0, 0,
@@ -261,12 +261,12 @@ void CMapTool::OnSaveData()
 
 		DWORD	dwByte(0);
 
-		CMainFrame*	pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
-		CToolView*	pMainView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
+		CMainFrame* pMainFrm = dynamic_cast<CMainFrame*>(AfxGetMainWnd());
+		CToolView* pMainView = dynamic_cast<CToolView*>(pMainFrm->m_MainSplitter.GetPane(0, 1));
 
-		CTerrain*	pTerrain = pMainView->m_pTerrain;
+		CTerrain* pTerrain = pMainView->m_pTerrain;
 
-		vector<TILE*>&	vecTile = pTerrain->Get_VecTile();
+		vector<TILE*>& vecTile = pTerrain->Get_VecTile();
 
 		if (vecTile.empty())
 			return;
@@ -288,6 +288,27 @@ void CMapTool::OnBnClickedOk()
 	CString strSelectName;
 	m_ListBox.GetText(iSelectIdx, strSelectName);
 
+	// strSelectName에서 숫자 부분만 추출합니다.
+	CString strNumberPart;
+	for (int i = 0; i < strSelectName.GetLength(); ++i)
+	{
+		if (isdigit(strSelectName[i])) // 문자가 숫자인지 확인
+		{
+			strNumberPart += strSelectName[i]; // 숫자 부분을 strNumberPart에 추가
+		}
+	}
+
+	// CString 형식의 숫자를 int 형식으로 변환합니다.
+	int nNumber = _ttoi(strNumberPart);
+
+	// int를 BYTE로 캐스팅합니다. (범위 확인 필요)
+	BYTE bNumber = static_cast<BYTE>(nNumber);
+	if (nNumber < 0 || nNumber > 255) {
+		// 숫자가 BYTE 범위를 벗어난 경우, 에러 처리를 해야 합니다.
+		AfxMessageBox(_T("Error: The number is out of the BYTE range."));
+		return;
+	}
+
 	// 메인 프레임에 접근합니다.
 	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
 	if (pMainFrame != nullptr)
@@ -300,7 +321,7 @@ void CMapTool::OnBnClickedOk()
 			CTerrain* pTerrain = pToolView->m_pTerrain;
 			if (pTerrain != nullptr)
 			{
-				pTerrain->SetSelectedImage(strSelectName);
+				pTerrain->SetSelectedImage(strSelectName, bNumber);
 			}
 		}
 	}

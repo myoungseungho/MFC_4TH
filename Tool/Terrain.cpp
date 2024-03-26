@@ -30,6 +30,13 @@ void CTerrain::Initialize()
 		return;
 	}
 
+	if (FAILED(CTextureMgr::Get_Instance()->
+		Insert_Texture(L"../Texture/Stage/Map/BackGround/BackGround%d.png", TEX_MULTI, L"Map", L"BackGround", 9)))
+	{
+		AfxMessageBox(L"Tile Img Insert Failed");
+		return;
+	}
+
 
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -64,6 +71,11 @@ void CTerrain::Mini_Render()
 
 	for (auto pTile : m_vecTile)
 	{
+
+		D3DXMATRIX	matWorld, matScale, matTrans;
+
+		TCHAR	szBuf[MIN_STR] = L"";
+		int		iIndex(0);
 		D3DXMatrixIdentity(&matWorld);
 
 		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
@@ -74,7 +86,7 @@ void CTerrain::Mini_Render()
 
 		matWorld = matScale * matTrans;
 
-		Set_Ratio(&matWorld, 0.3f, 0.3f);
+		Set_Ratio(&matWorld, 0.3f, 0.5f);
 
 		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
@@ -104,13 +116,13 @@ void CTerrain::Render()
 	float		fX = WINCX / float(rc.right - rc.left);
 	float		fY = WINCY / float(rc.bottom - rc.top);
 
-	D3DXMATRIX	matWorld, matScale, matTrans;
-
-	TCHAR	szBuf[MIN_STR] = L"";
-	int		iIndex(0);
-
 	for (auto pTile : m_vecTile)
 	{
+		D3DXMATRIX	matWorld, matScale, matTrans;
+
+		TCHAR	szBuf[MIN_STR] = L"";
+		int		iIndex(0);
+
 		D3DXMatrixIdentity(&matWorld);
 		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 		D3DXMatrixTranslation(&matTrans,
@@ -153,33 +165,56 @@ void CTerrain::Render()
 		
 	}
 
+
 	// 선택된 이미지 렌더링
 	if (!m_strSelectedImage.IsEmpty())
 	{
 		// 선택된 이미지의 텍스처 정보 조회
-		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(m_strSelectedImage);
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Map", L"BackGround", m_strNumberByte);
+
 		if (pTexInfo != nullptr)
 		{
 			D3DXMATRIX matWorld, matScale, matTrans;
 
-			// 이미지 위치와 크기를 조절할 수 있는 트랜스폼 설정
-			D3DXMatrixScaling(&matScale, 1.0f, 1.0f, 1.0f); // 필요에 따라 스케일 조정
+			TCHAR	szBuf[MIN_STR] = L"";
+			int		iIndex(0);
+
+			D3DXMatrixIdentity(&matWorld);
+			D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 			D3DXMatrixTranslation(&matTrans,
-				WINCX / 2.0f - (pTexInfo->tImgInfo.Width / 2.0f),
-				WINCY / 2.0f - (pTexInfo->tImgInfo.Height / 2.0f),
-				0.0f);
+				0 - m_pMainView->GetScrollPos(0),
+				0 - m_pMainView->GetScrollPos(1),
+				0);
 
 			matWorld = matScale * matTrans;
-			Set_Ratio(&matWorld, fX, fY); // 화면 비율에 맞게 조정
+
+			Set_Ratio(&matWorld, fX, fY);
 
 			CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-			// 이미지 그리기
+
+			if (nullptr == pTexInfo)
+				return;
+
+			float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+			float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
 			CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
 				nullptr,
-				&D3DXVECTOR3(pTexInfo->tImgInfo.Width / 2.0f, pTexInfo->tImgInfo.Height / 2.0f, 0.0f),
+				NULL,
 				nullptr,
 				D3DCOLOR_ARGB(255, 255, 255, 255));
+
+			swprintf_s(szBuf, L"%d", iIndex);
+
+			CDevice::Get_Instance()->Get_Font()->DrawTextW(
+				CDevice::Get_Instance()->Get_Sprite(),
+				szBuf,
+				lstrlen(szBuf),
+				nullptr,
+				0,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+
 		}
 	}
 }
