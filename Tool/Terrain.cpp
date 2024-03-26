@@ -66,7 +66,7 @@ void CTerrain::Mini_Render()
 
 		matWorld = matScale * matTrans;
 
-		Set_Ratio(&matWorld, 0.31f, 0.6f);
+		Set_Ratio(&matWorld, 0.3f, 0.3f);
 
 		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 

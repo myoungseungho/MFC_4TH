@@ -190,9 +190,15 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CScrollView::OnLButtonDown(nFlags, point);
 
+	CMainFrame*	pMainFrm = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMiniView*	pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
+
+	CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
+	CMapTool*	pMapTool = &pMyForm->m_MapTool;
+
 	m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0), 
 										(float)point.y + GetScrollPos(1),
-										0.f), 0);
+										0.f), pMapTool->m_iDrawID);
 
 
 	// AfxGetMainWnd() : 현재 동작하는 쓰레드로부터 wnd를 반환(현재 쓰레드가 메인 쓰레드인 경우 MainFrmWnd를 반환)
@@ -203,8 +209,7 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 
 	//AfxGetApp : 메인 쓰레드를 갖고 있는 현재 메인 App을 반환
-	CMainFrame*	pMainFrm = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
-	CMiniView*	pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
+
 	pMiniView->Invalidate(FALSE);
 	
 	
@@ -231,13 +236,20 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
-											(float)point.y + GetScrollPos(1),
-											0.f), 0);
-		Invalidate(FALSE);
 
 		CMainFrame*	pMainFrm = dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 		CMiniView*	pMiniView = dynamic_cast<CMiniView*>(pMainFrm->m_SecondSplitter.GetPane(0, 0));
+
+		CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
+		CMapTool*	pMapTool = &pMyForm->m_MapTool;
+
+		m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
+											(float)point.y + GetScrollPos(1),
+											0.f), pMapTool->m_iDrawID);
+		Invalidate(FALSE);
+		
 		pMiniView->Invalidate(FALSE);
 	}
 }
+
+

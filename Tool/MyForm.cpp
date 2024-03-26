@@ -28,6 +28,7 @@ void CMyForm::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMyForm, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMyForm::OnUnitTool)
 	ON_BN_CLICKED(IDC_BUTTON7, &CMyForm::OnMapTool)
+	ON_BN_CLICKED(IDC_BUTTON8, &CMyForm::OnPathFind)
 END_MESSAGE_MAP()
 
 
@@ -59,6 +60,7 @@ void CMyForm::OnInitialUpdate()
 
 	GetDlgItem(IDC_BUTTON1)->SetFont(&m_Font);
 	GetDlgItem(IDC_BUTTON7)->SetFont(&m_Font);
+	GetDlgItem(IDC_BUTTON8)->SetFont(&m_Font);
 }
 
 void CMyForm::OnUnitTool()
@@ -80,4 +82,13 @@ void CMyForm::OnMapTool()
 		m_MapTool.Create(IDD_MAPTOOL);	 // 해당 id에 맞는 다이얼로그 생성
 
 	m_MapTool.ShowWindow(SW_SHOW);
+}
+
+
+void CMyForm::OnPathFind()
+{
+	if (nullptr == m_PathFind.GetSafeHwnd())
+		m_PathFind.Create(IDD_PATHFIND);	 // 해당 id에 맞는 다이얼로그 생성
+
+	m_PathFind.ShowWindow(SW_SHOW);
 }

@@ -1,0 +1,22 @@
+#pragma once
+
+#include "Include.h"
+
+class CTexture
+{
+public:
+	CTexture();
+	virtual ~CTexture();
+
+public:
+	virtual	const	TEXINFO*		Get_Texture(const TCHAR* pStateKey = L"", 
+												const int& iCount = 0) PURE;
+
+	virtual HRESULT		Insert_Texture(const TCHAR* pFilePath, // 이미지 경로
+										const TCHAR* pStateKey = L"", 
+										const int& iCount = 0)		PURE;
+
+	virtual void		Release() PURE;
+
+};
+

@@ -2,6 +2,7 @@
 
 #include "UnitTool.h"
 #include "MapTool.h"
+#include "PathFind.h"
 
 // CMyForm 폼 뷰입니다.
 
@@ -32,11 +33,12 @@ public:
 	afx_msg void OnUnitTool();
 	virtual void OnInitialUpdate();
 	afx_msg void OnMapTool();
-
+	afx_msg void OnPathFind();
 
 	CFont		m_Font;		// mfc 에서 제공하는 폰트 객체
 	CUnitTool	m_UnitTool;
 	CMapTool	m_MapTool;
+	CPathFind	m_PathFind;
 };
 
 
