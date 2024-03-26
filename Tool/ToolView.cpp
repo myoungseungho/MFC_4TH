@@ -195,7 +195,7 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0), 
 										(float)point.y + GetScrollPos(1),
-										0.f), pMapTool->m_iDrawID);
+										0.f), 37);
 
 
 	// AfxGetMainWnd() : 현재 동작하는 쓰레드로부터 wnd를 반환(현재 쓰레드가 메인 쓰레드인 경우 MainFrmWnd를 반환)
@@ -242,7 +242,7 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 		m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
 											(float)point.y + GetScrollPos(1),
-											0.f), pMapTool->m_iDrawID);
+											0.f), 37);
 		Invalidate(FALSE);
 		
 		pMiniView->Invalidate(FALSE);

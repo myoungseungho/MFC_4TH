@@ -36,8 +36,8 @@ BOOL CMapTool::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	// 여기에 초기화 코드 추가
 	LoadImagesFromDirectory(L"C:\\Users\\명승호\\Desktop\\쥬신\\4차팀과제\\Texture\\Stage\\BackGround\\BackGround"); // 경로는 예시입니다. 실제 경로로 변경하세요.
+
 	return TRUE;
 }
 

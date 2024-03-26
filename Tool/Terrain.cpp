@@ -115,56 +115,7 @@ void CTerrain::Render()
 
 	float		fX = WINCX / float(rc.right - rc.left);
 	float		fY = WINCY / float(rc.bottom - rc.top);
-
-	for (auto pTile : m_vecTile)
-	{
-		D3DXMATRIX	matWorld, matScale, matTrans;
-
-		TCHAR	szBuf[MIN_STR] = L"";
-		int		iIndex(0);
-
-		D3DXMatrixIdentity(&matWorld);
-		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
-		D3DXMatrixTranslation(&matTrans,
-			pTile->vPos.x - m_pMainView->GetScrollPos(0),	// 가로 스크롤
-			pTile->vPos.y - m_pMainView->GetScrollPos(1),	// 세로 스크롤
-			pTile->vPos.z);
-
-		matWorld = matScale * matTrans;
-
-		Set_Ratio(&matWorld, fX, fY);
-		
-		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
-
-		const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", pTile->byDrawID);
-
-		if (nullptr == pTexInfo)
-			return;
-
-		float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
-		float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
-
-		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-			nullptr,  // 출력할 이미지 영역에 대한 RECT 주소, NULL인 경우 이미지의 0, 0 기준으로 출력
-			&D3DXVECTOR3(fCenterX, fCenterY, 0.f),  // 출력할 이미지 중심 위치에 대한 VEC3 구조체 주소, NULL인 경우 0, 0이 중심 좌표
-			nullptr,  // 이미지를 출력할 좌표, NULL인 경우 스크린 상 0,0 좌표에 출력
-			D3DCOLOR_ARGB(255, 255, 255, 255));	// 출력할 원본 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 값 유지
-			
-		// 타일 인덱스 출력
-		swprintf_s(szBuf, L"%d", iIndex);
-
-		CDevice::Get_Instance()->Get_Font()->DrawTextW(
-			CDevice::Get_Instance()->Get_Sprite(),
-			szBuf,		// 출력할 문자열
-			lstrlen(szBuf), // 출력할 문자열 버퍼의 크기
-			nullptr,	// 출력할 위치의 렉트 주소
-			0,			// 문자 정렬 옵션
-			D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 폰트 색상
-
-		++iIndex;
-		
-	}
-
+	
 
 	// 선택된 이미지 렌더링
 	if (!m_strSelectedImage.IsEmpty())
@@ -217,6 +168,56 @@ void CTerrain::Render()
 
 		}
 	}
+
+	for (auto pTile : m_vecTile)
+	{
+		D3DXMATRIX	matWorld, matScale, matTrans;
+
+		TCHAR	szBuf[MIN_STR] = L"";
+		int		iIndex(0);
+
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+		D3DXMatrixTranslation(&matTrans,
+			pTile->vPos.x - m_pMainView->GetScrollPos(0),	// 가로 스크롤
+			pTile->vPos.y - m_pMainView->GetScrollPos(1),	// 세로 스크롤
+			pTile->vPos.z);
+
+		matWorld = matScale * matTrans;
+
+		Set_Ratio(&matWorld, fX, fY);
+
+		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", pTile->byDrawID);
+
+		if (nullptr == pTexInfo)
+			return;
+
+		float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+		float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
+		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+			nullptr,  // 출력할 이미지 영역에 대한 RECT 주소, NULL인 경우 이미지의 0, 0 기준으로 출력
+			&D3DXVECTOR3(fCenterX, fCenterY, 0.f),  // 출력할 이미지 중심 위치에 대한 VEC3 구조체 주소, NULL인 경우 0, 0이 중심 좌표
+			nullptr,  // 이미지를 출력할 좌표, NULL인 경우 스크린 상 0,0 좌표에 출력
+			D3DCOLOR_ARGB(255, 255, 255, 255));	// 출력할 원본 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 값 유지
+
+		//// 타일 인덱스 출력
+		//swprintf_s(szBuf, L"%d", iIndex);
+
+		//CDevice::Get_Instance()->Get_Font()->DrawTextW(
+		//	CDevice::Get_Instance()->Get_Sprite(),
+		//	szBuf,		// 출력할 문자열
+		//	lstrlen(szBuf), // 출력할 문자열 버퍼의 크기
+		//	nullptr,	// 출력할 위치의 렉트 주소
+		//	0,			// 문자 정렬 옵션
+		//	D3DCOLOR_ARGB(255, 255, 255, 255)); // 출력할 폰트 색상
+
+		//++iIndex;
+
+	}
+
 }
 
 void CTerrain::Release()
