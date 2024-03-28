@@ -14,7 +14,7 @@
 #include "Device.h"
 #include "TextureMgr.h"
 #include "MainFrm.h"
-
+#include "CObjectTool.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -191,10 +191,15 @@ void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
 	CMapTool*	pMapTool = &pMyForm->m_MapTool;
+	CObjectTool* pObjTool = &pMyForm->m_ObjTool;
 
-	m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0), 
+	/*m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0), 
 										(float)point.y + GetScrollPos(1),
-										0.f), 37);
+										0.f), 37);*/
+
+	m_pTerrain->Obj_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
+		(float)point.y + GetScrollPos(1),
+		0.f), pObjTool->m_iDrawID);
 
 
 	// AfxGetMainWnd() : 현재 동작하는 쓰레드로부터 wnd를 반환(현재 쓰레드가 메인 쓰레드인 경우 MainFrmWnd를 반환)
@@ -239,9 +244,9 @@ void CToolView::OnMouseMove(UINT nFlags, CPoint point)
 		CMyForm*	pMyForm = dynamic_cast<CMyForm*>(pMainFrm->m_SecondSplitter.GetPane(1, 0));
 		CMapTool*	pMapTool = &pMyForm->m_MapTool;
 
-		m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
+	/*	m_pTerrain->Tile_Change(D3DXVECTOR3((float)point.x + GetScrollPos(0),
 											(float)point.y + GetScrollPos(1),
-											0.f), 37);
+											0.f), 37);*/
 		Invalidate(FALSE);
 		
 		pMiniView->Invalidate(FALSE);

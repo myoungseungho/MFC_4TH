@@ -13,6 +13,7 @@ public:
 	void		Set_MainView(CToolView* pMainView) { m_pMainView = pMainView; }
 
 	vector<TILE*>& Get_VecTile() { return m_vecTile; }
+	vector<TILE*>& Get_VecTree() { return m_vecTree; }
 
 public:
 	void		Initialize();
@@ -20,12 +21,17 @@ public:
 	void		Mini_Render();
 	void		Render();
 	void		Release();
+	void		TileRelease();
 
 public:
 	void		Tile_Change(const D3DXVECTOR3& vPos, const int& iDrawID);
 	int			Get_TileIndex(const D3DXVECTOR3& vPos);
 	bool		Picking(const D3DXVECTOR3& vPos, const int& iIndex);
 	bool		Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex);
+
+	void		Obj_Change(const D3DXVECTOR3& vPos, const int& iDrawID);
+	int			Get_ObjIndex(const D3DXVECTOR3& vPos);
+	bool		ObjPicking_Dot(const D3DXVECTOR3& vPos, const int& iIndex);
 
 private:
 	void		Set_Ratio(D3DXMATRIX* pOut, float fRatioX, float fRatioY);
@@ -43,6 +49,7 @@ public:
 
 private:
 	vector<TILE*>		m_vecTile;
+	vector<TILE*>		m_vecTree;
 
 	CToolView* m_pMainView;
 

@@ -37,29 +37,54 @@ void CTerrain::Initialize()
 		return;
 	}
 
+	if (FAILED(CTextureMgr::Get_Instance()->
+		Insert_Texture(L"../Texture/Tales/Object/Tree/Tree%d.png", TEX_MULTI, L"Terr", L"Tree", 51)))
+	{
+		AfxMessageBox(L"Tile Img Insert Failed");
+		return;
+	}
+
+
+	//for (int i = 0; i < TILEY; ++i)
+	//{
+	//	for (int j = 0; j < TILEX; ++j)
+	//	{
+	//		TILE*	pTile = new TILE;
+
+	//		float	fY = i * (TILECY / 2.f);
+	//		float	fX = (j * TILECX) + (i % 2) * (TILECX / 2.f);
+
+	//		pTile->vPos = {fX, fY , 0.f};
+	//		pTile->vSize = { (float)TILECX, (float)TILECY, 0.f };
+	//		pTile->byOption = 0;
+	//		pTile->byDrawID = 36;
+
+	//		m_vecTile.push_back(pTile);			
+	//	}
+	//}
 
 	for (int i = 0; i < TILEY; ++i)
 	{
 		for (int j = 0; j < TILEX; ++j)
 		{
-			TILE*	pTile = new TILE;
+			TILE* pTree = new TILE;
 
 			float	fY = i * (TILECY / 2.f);
 			float	fX = (j * TILECX) + (i % 2) * (TILECX / 2.f);
 
-			pTile->vPos = {fX, fY , 0.f};
-			pTile->vSize = { (float)TILECX, (float)TILECY, 0.f };
-			pTile->byOption = 0;
-			pTile->byDrawID = 36;
+			pTree->vPos = { fX, fY , 0.f };
+			pTree->vSize = { (float)TILECX, (float)TILECY, 0.f };
+			pTree->byOption = 0;
+			pTree->byDrawID = 0;
 
-			m_vecTile.push_back(pTile);			
+			m_vecTree.push_back(pTree);
 		}
 	}
 }
 
 void CTerrain::Update()
 {
-	
+
 }
 
 void CTerrain::Mini_Render()
@@ -114,8 +139,8 @@ void CTerrain::Mini_Render()
 
 		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 		D3DXMatrixTranslation(&matTrans,
-			pTile->vPos.x,	
-			pTile->vPos.y,	
+			pTile->vPos.x,
+			pTile->vPos.y + 100.f,
 			pTile->vPos.z);
 
 		matWorld = matScale * matTrans;
@@ -124,7 +149,7 @@ void CTerrain::Mini_Render()
 
 		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
 
-		const TEXINFO*	pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", pTile->byDrawID);
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terrain", L"Tile", pTile->byDrawID);
 
 		if (nullptr == pTexInfo)
 			return;
@@ -133,10 +158,43 @@ void CTerrain::Mini_Render()
 		float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
 
 		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
-			nullptr,  
-			&D3DXVECTOR3(fCenterX, fCenterY, 0.f), 
-			nullptr,  
-			D3DCOLOR_ARGB(255, 255, 255, 255));	
+			nullptr,
+			&D3DXVECTOR3(fCenterX, fCenterY, 0.f),
+			nullptr,
+			D3DCOLOR_ARGB(255, 255, 255, 255));
+	}
+
+	for (auto pTile : m_vecTree)
+	{
+		D3DXMATRIX	matWorld, matScale, matTrans;
+
+		D3DXMatrixIdentity(&matWorld);
+
+		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+		D3DXMatrixTranslation(&matTrans,
+			pTile->vPos.x,
+			pTile->vPos.y,
+			pTile->vPos.z);
+
+		matWorld = matScale * matTrans;
+
+		Set_Ratio(&matWorld, 0.3f, 0.3f);
+
+		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terr", L"Tree", pTile->byDrawID);
+
+		if (nullptr == pTexInfo)
+			return;
+
+		float   fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+		float   fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
+		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+			nullptr,
+			&D3DXVECTOR3(fCenterX, fCenterY, 0.f),
+			nullptr,
+			D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
 }
 
@@ -149,7 +207,7 @@ void CTerrain::Render()
 
 	float		fX = WINCX / float(rc.right - rc.left);
 	float		fY = WINCY / float(rc.bottom - rc.top);
-	
+
 
 	// 선택된 이미지 렌더링
 	if (!m_strSelectedImage.IsEmpty())
@@ -251,7 +309,37 @@ void CTerrain::Render()
 		//++iIndex;
 
 	}
+	for (auto pTile : m_vecTree)
+	{
+		D3DXMATRIX	matWorld, matScale, matTrans;
 
+		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+		D3DXMatrixTranslation(&matTrans,
+			pTile->vPos.x - m_pMainView->GetScrollPos(0),	// 가로 스크롤
+			pTile->vPos.y - m_pMainView->GetScrollPos(1),	// 세로 스크롤
+			pTile->vPos.z);
+
+		matWorld = matScale * matTrans;
+
+		Set_Ratio(&matWorld, fX, fY);
+
+		CDevice::Get_Instance()->Get_Sprite()->SetTransform(&matWorld);
+
+		const TEXINFO* pTexInfo = CTextureMgr::Get_Instance()->Get_Texture(L"Terr", L"Tree", pTile->byDrawID);
+
+		if (nullptr == pTexInfo)
+			return;
+
+		float	fCenterX = pTexInfo->tImgInfo.Width / 2.f;
+		float	fCenterY = pTexInfo->tImgInfo.Height / 2.f;
+
+		CDevice::Get_Instance()->Get_Sprite()->Draw(pTexInfo->pTexture,
+			nullptr,  // 출력할 이미지 영역에 대한 RECT 주소, NULL인 경우 이미지의 0, 0 기준으로 출력
+			&D3DXVECTOR3(fCenterX, fCenterY, 0.f),  // 출력할 이미지 중심 위치에 대한 VEC3 구조체 주소, NULL인 경우 0, 0이 중심 좌표
+			nullptr,  // 이미지를 출력할 좌표, NULL인 경우 스크린 상 0,0 좌표에 출력
+			D3DCOLOR_ARGB(255, 255, 255, 255));	// 출력할 원본 이미지와 섞을 색상 값, 0xffffffff를 넘겨주면 원본 값 유지
+	}
 }
 
 void CTerrain::Release()
@@ -261,18 +349,25 @@ void CTerrain::Release()
 	m_vecTile.shrink_to_fit();
 }
 
-void CTerrain::Tile_Change(const D3DXVECTOR3 & vPos, const int & iDrawID)
+void CTerrain::TileRelease()
+{
+	for_each(m_vecTile.begin(), m_vecTile.end(), CDeleteObj());
+	m_vecTile.clear();
+	m_vecTile.shrink_to_fit();
+}
+
+void CTerrain::Tile_Change(const D3DXVECTOR3& vPos, const int& iDrawID)
 {
 	int		iIndex = Get_TileIndex(vPos);
 
 	if (-1 == iIndex)
 		return;
-	
+
 	m_vecTile[iIndex]->byDrawID = (BYTE)iDrawID;
 	m_vecTile[iIndex]->byOption = 1;
 }
 
-int CTerrain::Get_TileIndex(const D3DXVECTOR3 & vPos)
+int CTerrain::Get_TileIndex(const D3DXVECTOR3& vPos)
 {
 	for (size_t iIndex = 0; iIndex < m_vecTile.size(); ++iIndex)
 	{
@@ -283,11 +378,11 @@ int CTerrain::Get_TileIndex(const D3DXVECTOR3 & vPos)
 	return -1;
 }
 
-bool CTerrain::Picking(const D3DXVECTOR3 & vPos, const int & iIndex)
+bool CTerrain::Picking(const D3DXVECTOR3& vPos, const int& iIndex)
 {
 	// 12->3->6->9
 
-	float		fGradient[4]  
+	float		fGradient[4]
 	{
 		(TILECY / 2.f) / (TILECX / 2.f) * -1.f,
 		(TILECY / 2.f) / (TILECX / 2.f),
@@ -315,7 +410,7 @@ bool CTerrain::Picking(const D3DXVECTOR3 & vPos, const int & iIndex)
 		vPoint[3].y - fGradient[3] * vPoint[3].x
 	};
 
-	bool	bCheck[4] {false};
+	bool	bCheck[4]{ false };
 
 	// 12->3
 	// 0 = ax + b - y  (선 상에 점이 존재)
@@ -337,11 +432,11 @@ bool CTerrain::Picking(const D3DXVECTOR3 & vPos, const int & iIndex)
 	// 9->12
 	if (0 < fGradient[3] * vPos.x + fB[3] - vPos.y)
 		bCheck[3] = true;
-	
+
 	return bCheck[0] && bCheck[1] && bCheck[2] && bCheck[3];
 }
 
-bool CTerrain::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
+bool CTerrain::Picking_Dot(const D3DXVECTOR3& vPos, const int& iIndex)
 {
 	// 12, 3, 6, 9
 
@@ -392,7 +487,80 @@ bool CTerrain::Picking_Dot(const D3DXVECTOR3 & vPos, const int & iIndex)
 	return true;
 }
 
-void CTerrain::Set_Ratio(D3DXMATRIX * pOut, float fRatioX, float fRatioY)
+void CTerrain::Obj_Change(const D3DXVECTOR3& vPos, const int& iDrawID)
+{
+	int		iIndex = Get_ObjIndex(vPos);
+
+	if (-1 == iIndex)
+		return;
+
+	m_vecTree[iIndex]->byDrawID = (BYTE)iDrawID;
+	m_vecTree[iIndex]->byOption = 1;
+}
+
+int CTerrain::Get_ObjIndex(const D3DXVECTOR3& vPos)
+{
+	for (size_t iIndex = 0; iIndex < m_vecTree.size(); ++iIndex)
+	{
+		if (ObjPicking_Dot(vPos, iIndex))
+			return iIndex;
+	}
+
+	return -1;
+}
+
+bool CTerrain::ObjPicking_Dot(const D3DXVECTOR3& vPos, const int& iIndex)
+{
+	// 12, 3, 6, 9
+
+	D3DXVECTOR3		vPoint[4]
+	{
+		{ m_vecTree[iIndex]->vPos.x, m_vecTree[iIndex]->vPos.y + (TILECY / 2.f), 0.f } ,
+		{ m_vecTree[iIndex]->vPos.x + (TILECX / 2.f), m_vecTree[iIndex]->vPos.y, 0.f } ,
+		{ m_vecTree[iIndex]->vPos.x, m_vecTree[iIndex]->vPos.y - (TILECY / 2.f), 0.f } ,
+		{ m_vecTree[iIndex]->vPos.x - (TILECX / 2.f), m_vecTree[iIndex]->vPos.y, 0.f }
+	};
+
+	D3DXVECTOR3		vDir[4]
+	{
+		vPoint[1] - vPoint[0],
+		vPoint[2] - vPoint[1],
+		vPoint[3] - vPoint[2],
+		vPoint[0] - vPoint[3]
+	};
+
+	D3DXVECTOR3	vNormal[4]
+	{
+		{ -vDir[0].y, vDir[0].x, 0.f},
+		{ -vDir[1].y, vDir[1].x, 0.f },
+		{ -vDir[2].y, vDir[2].x, 0.f },
+		{ -vDir[3].y, vDir[3].x, 0.f }
+	};
+
+	D3DXVECTOR3	vMouseDir[4]
+	{
+		vPos - vPoint[0],
+		vPos - vPoint[1],
+		vPos - vPoint[2],
+		vPos - vPoint[3]
+	};
+
+	for (int i = 0; i < 4; ++i)
+	{
+		D3DXVec3Normalize(&vNormal[i], &vNormal[i]);
+		D3DXVec3Normalize(&vMouseDir[i], &vMouseDir[i]);
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (0.f < D3DXVec3Dot(&vNormal[i], &vMouseDir[i]))
+			return false;
+	}
+
+	return true;
+}
+
+void CTerrain::Set_Ratio(D3DXMATRIX* pOut, float fRatioX, float fRatioY)
 {
 	pOut->_11 *= fRatioX;
 	pOut->_21 *= fRatioX;

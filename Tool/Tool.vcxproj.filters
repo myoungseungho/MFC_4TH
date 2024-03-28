@@ -58,6 +58,9 @@
     <Filter Include="06. MyForm\03. PathFind">
       <UniqueIdentifier>{d502d8df-ca05-41f9-b47b-549cb456f982}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. MyForm\04. ObjectTool">
+      <UniqueIdentifier>{ee17fe95-5fbb-43d9-8d24-af9e4d441361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -120,6 +123,9 @@
     <ClInclude Include="PathFind.h">
       <Filter>06. MyForm\03. PathFind</Filter>
     </ClInclude>
+    <ClInclude Include="CObjectTool.h">
+      <Filter>06. MyForm\04. ObjectTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tool.cpp">
@@ -172,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="PathFind.cpp">
       <Filter>06. MyForm\03. PathFind</Filter>
+    </ClCompile>
+    <ClCompile Include="CObjectTool.cpp">
+      <Filter>06. MyForm\04. ObjectTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

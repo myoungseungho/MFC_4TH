@@ -35,8 +35,8 @@ void CMapTool::DoDataExchange(CDataExchange* pDX)
 BOOL CMapTool::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	LoadImagesFromDirectory(L"C:\\Users\\명승호\\Desktop\\쥬신\\4차팀과제\\Texture\\Stage\\BackGround\\BackGround"); // 경로는 예시입니다. 실제 경로로 변경하세요.
+//C:\Users\myoun\Desktop\쥬신아카데미\4차팀과제\Texture\Stage\BackGround\BackGround
+	LoadImagesFromDirectory(L"C:\\Users\\myoun\\Desktop\\쥬신아카데미\\4차팀과제\\Texture\\Stage\\BackGround\\BackGround"); // 경로는 예시입니다. 실제 경로로 변경하세요.
 
 	return TRUE;
 }
@@ -80,6 +80,7 @@ BEGIN_MESSAGE_MAP(CMapTool, CDialog)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMapTool::OnSaveData)
 	ON_BN_CLICKED(IDOK, &CMapTool::OnBnClickedOk)
+	ON_STN_CLICKED(IDC_PICTURE, &CMapTool::OnStnClickedPicture)
 END_MESSAGE_MAP()
 
 
@@ -327,4 +328,10 @@ void CMapTool::OnBnClickedOk()
 	}
 
 	CDialog::OnOK(); // 기본 OK 처리를 실행합니다.
+}
+
+
+void CMapTool::OnStnClickedPicture()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

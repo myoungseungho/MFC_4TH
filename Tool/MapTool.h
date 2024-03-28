@@ -40,4 +40,5 @@ public:
 	map<CString, CImage*>		m_mapPngImg;
 	int							m_iDrawID = 0;
 	afx_msg void OnSaveData();
+	afx_msg void OnStnClickedPicture();
 };
